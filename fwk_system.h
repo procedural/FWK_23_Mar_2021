@@ -227,12 +227,9 @@ void trace_cb( int traces, int (*yield)(const char *)) { //$
         char *binary = symbols[i]; strstr( symbols[i], "(" )[0] = '\0';
         char command[1024]; sprintf(command, "addr2line -e %s %s", binary, address);
         FILE *fp = popen( command, "rb" );
-        if( !fp ) {
-            exit( puts( "cannot invoke 'addr2line'" ) );
-        }
-        char *line_p = fgets(demangled, sizeof(demangled), fp);
+        char *line_p = fp ? fgets(demangled, sizeof(demangled), fp) : strcpy(demangled, "??");
         symbols[i] = demangled;
-        pclose(fp);
+        if( fp ) pclose(fp);
 #elif __APPLE__
         struct Dl_info info;
         if( dladdr(stack[i], &info) && info.dli_sname ) {
