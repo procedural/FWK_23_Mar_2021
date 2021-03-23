@@ -94,7 +94,11 @@ void window_drop_callback(GLFWwindow* window, int count, const char** paths) {
     // @fixme: wait until any active import (launch) is done
 
     char pathdir[512]; snprintf(pathdir, 512, "3rd/3rd_assets/import/%llu_%s/", time_human(), getenv("USERNAME"));
+#ifdef _WIN32
     mkdir( pathdir );
+#else
+    mkdir( pathdir, 0777 );
+#endif
 
     int errors = 0;
     for( int i = 0; i < count; ++i ) {
