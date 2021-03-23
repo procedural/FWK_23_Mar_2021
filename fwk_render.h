@@ -215,7 +215,7 @@ typedef struct model_t {
 } model_t;
 
 model_t  model(const char *filename, int flags);
-model_t  model_from_mem(const void *filename, int sz, int flags);
+model_t  model_from_mem(const void *mem, int sz, int flags);
 float    model_animate(model_t, float curframe);
 float    model_animate_clip(model_t, float curframe, int minframe, int maxframe, bool loop);
 aabb     model_aabb(model_t, mat44 transform);
@@ -2316,7 +2316,8 @@ model_t model(const char *filename, int flags) {
     char *ptr = vfs_load(filename, &len); // + vfs_popd
     return model_from_mem( ptr, len, flags );
 }
-model_t model_from_mem(const char *ptr, int len, int flags) {
+model_t model_from_mem(const void *mem, int len, int flags) {
+    const char *ptr = (const char *)mem;
     static int shaderprog = -1;
     if( shaderprog < 0 ) {
         const char* vs =
