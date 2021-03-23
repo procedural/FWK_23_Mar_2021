@@ -66,6 +66,12 @@
 #ifndef strcmpi
 #define strcmpi strcasecmp
 #endif
+#ifndef _popen
+#define _popen popen
+#endif
+#ifndef _pclose
+#define _pclose pclose
+#endif
 #include "fwk_memory.h"
 #include "fwk_math.h"
 #include "fwk_collide.h"
