@@ -53,7 +53,8 @@
 // -----------------------------------------------------------------------------
 // forward includes
 
-#define array(t) t*  // forward #include "3rd/3rd_ds.h"
+#ifdef __linux__
+
 #ifndef SYS_REALLOC
 #define SYS_REALLOC realloc
 #endif
@@ -72,6 +73,10 @@
 #ifndef _pclose
 #define _pclose pclose
 #endif
+
+#endif
+
+#define array(t) t*  // forward #include "3rd/3rd_ds.h"
 #include "fwk_memory.h"
 #include "fwk_math.h"
 #include "fwk_collide.h"
