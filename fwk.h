@@ -573,7 +573,7 @@ static void fwk_post_init_systems() {
 
     for( int i = 0; i < 16; ++i)
     if(!vfs_mount(stringf(".cook[%d].zip", i))) {}; // PANIC("cannot mount fs: .cook[%d].zip", i);
-	cooker_progress = 101;
+	cooker__progress = 101;
 
     // create an empty scene by default
     scene_push();
