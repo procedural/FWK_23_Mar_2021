@@ -16,7 +16,11 @@
 // -----------------------------------------------------------------------------
 // new C keywords
 #define countof(x)   (sizeof (x) / sizeof 0[x])
+#ifdef _WIN32
 #define threadlocal  __declspec(thread)
+#elif __linux__
+#define threadlocal  __thread
+#endif
 
 // -----------------------------------------------------------------------------
 // directives (debug /O0 /D3 > debugopt /O1 /D2 > release (ndebug) /O2 /D1 > final /O3 /D0)
