@@ -76,11 +76,20 @@ __attribute__((constructor)) void init_argcv(int argc, char **argv) { __argc = a
 char *app_path() { // should return absolute path always
     static char buffer[1024] = {0};
     if( buffer[0] ) return buffer;
+#if defined(_WIN32)
     unsigned length = GetModuleFileNameA(NULL, buffer, sizeof(buffer)); // @todo: use GetModuleFileNameW+wchar_t && convert to utf8 instead
     char *a = strrchr(buffer, '/');  if(!a) a = buffer + strlen(buffer);
     char *b = strrchr(buffer, '\\'); if(!b) b = buffer + strlen(buffer);
     char slash = (a < b ? *a : b < a ? *b : '/');
     return snprintf(buffer, 1024, "%.*s%c", length - (int)(a < b ? b - a : a - b), buffer, slash), buffer;
+#elif defined(__linux__)
+    char path[21] = {0};
+    sprintf(path, "/proc/%d/exe", getpid());
+    readlink(path, buffer, sizeof(buffer));
+    return buffer;
+#else
+#error "Implement this!"
+#endif
 }
 
 void app_reload() {
