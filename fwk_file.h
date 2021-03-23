@@ -223,7 +223,7 @@ const char** file_list(const char *masks) {
     {
     char buf[1024];
     char *_lit = (char*)(masks);
-    char *_bak = (snprintf(buf, 1024, "%s", _lit), _lit);
+    char *_bak = (snprintf(buf, 1024, "%s", _lit), buf);
     for (; _bak; _bak = 0) {
     char * next_token = 0;
     char * it = strtok_r(_bak, ";", &next_token);
