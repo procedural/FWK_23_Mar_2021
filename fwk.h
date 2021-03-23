@@ -57,6 +57,9 @@
 #ifndef SYS_REALLOC
 #define SYS_REALLOC realloc
 #endif
+#ifndef _atoi64
+#define _atoi64 atoll
+#endif
 #include "fwk_memory.h"
 #include "fwk_math.h"
 #include "fwk_collide.h"
