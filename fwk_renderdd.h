@@ -28,7 +28,7 @@ void ddraw_cube(vec3 center, float radius);
 void ddraw_diamond(vec3 from, vec3 to, float size);
 void ddraw_frustum(float projview[16]);
 void ddraw_gizmo(vec3 center);
-void ddraw_grid();
+void ddraw_grid(float scale);
 void ddraw_hexagon(vec3 pos, float radius);
 void ddraw_line(vec3 from, vec3 to);
 void ddraw_line_dash(vec3 from, vec3 to);
