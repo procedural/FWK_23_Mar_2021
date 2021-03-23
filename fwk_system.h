@@ -68,6 +68,11 @@ int (PANIC)(const char *error, const char *file, int line);
 #ifdef SYSTEM_C
 #pragma once
 
+#if defined(__GNUC__) || defined(__clang__)
+int __argc; char **__argv;
+__attribute__((constructor)) void init_argcv(int argc, char **argv) { __argc = argc; __argv = argv; }
+#endif
+
 char *app_path() { // should return absolute path always
     static char buffer[1024] = {0};
     if( buffer[0] ) return buffer;
@@ -351,10 +356,6 @@ double sleep_ss(double ss) {
 // ----------------------------------------------------------------------------
 // argc/v
 
-#ifdef __GNUC__ // also, clang
-    int __argc; char **__argv;
-    __attribute__((constructor)) void init_argcv(int argc, char **argv) { __argc = argc; __argv = argv; }
-#endif
 int os_argc() { return __argc; }
 char* os_argv(int arg) { return __argv[arg]; }
 
