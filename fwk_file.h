@@ -217,18 +217,7 @@ const char** file_list(const char *masks) {
     }
     array_free(list);
 
-#if 0
     for each_substring(masks,";",it) {
-#else
-    {
-    char buf[1024];
-    char *_lit = (char*)(masks);
-    char *_bak = (snprintf(buf, 1024, "%s", _lit), buf);
-    for (; _bak; _bak = 0) {
-    char * next_token = 0;
-    char * it = strtok_r(_bak, ";", &next_token);
-    for (; it; it = strtok_r(NULL, ";", &next_token)) {
-#endif
         int recurse = !!strstr(it, "**");
         #ifdef _WIN32
         char *glob = stringf("dir %s /b/o:n %s", recurse ? "/s":"", it);
@@ -247,7 +236,7 @@ const char** file_list(const char *masks) {
                 array_push(list, copy);
             }
         }
-    }}}
+    }
     array_push(list, 0); // terminator
     return list;
 }
