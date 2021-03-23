@@ -351,9 +351,17 @@ uint64_t time_gpu() {
 double sleep_ms(double ms) {
     double now = time_ms();
     if( ms <= 0 ) {
+#ifdef _WIN32
         Sleep(0); // yield
+#else
+        usleep(0);
+#endif
     } else {
+#ifdef _WIN32
         Sleep(ms);
+#else
+        usleep(ms * 1000);
+#endif
     }
     return time_ms() - now;
 }
