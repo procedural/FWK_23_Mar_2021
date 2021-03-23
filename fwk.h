@@ -60,6 +60,9 @@
 #ifndef _atoi64
 #define _atoi64 atoll
 #endif
+#ifndef strstri
+#define strstri strcasestr
+#endif
 #include "fwk_memory.h"
 #include "fwk_math.h"
 #include "fwk_collide.h"
