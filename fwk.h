@@ -18,7 +18,8 @@
 #define countof(x)   (sizeof (x) / sizeof 0[x])
 #ifdef _WIN32
 #define threadlocal  __declspec(thread)
-#elif __linux__
+#endif
+#ifdef __linux__
 #define threadlocal  __thread
 #endif
 
