@@ -5,8 +5,8 @@ void script_init();
 void script_run(const char *script);
 void script_runfile(const char *pathfile);
 
-void script_bind_class(const char *objname, int num_methods, const char *c_names[], int(**c_functions)(struct lua_State*));
-void script_bind_function(const char *c_name, int(*c_function)(struct lua_State*) );
+void script_bind_class(const char *objname, int num_methods, const char **c_names, void **c_functions);
+void script_bind_function(const char *c_name, void *c_function);
 void script_call(const char *lua_function);
 
 
@@ -55,7 +55,7 @@ static int script__call(lua_State *L, int narg, int clear) {
 #endif
 }
 
-void script_bind_function(const char *c_name, lua_CFunction c_function) {
+void script_bind_function(const char *c_name, void *c_function) {
     lua_pushcfunction( L, c_function );
     lua_setglobal( L, c_name );
 }
@@ -65,7 +65,7 @@ void script_call(const char *lua_function) {
     script__call( L, 0, 1 );
 }
 
-void script_bind_class(const char *classname, int num, const char **methods, lua_CFunction* functions) {
+void script_bind_class(const char *classname, int num, const char **methods, void **functions) {
     lua_newtable( L );
 
     for( int i = 0; i < num; ++i) {
