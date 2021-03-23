@@ -54,6 +54,9 @@
 // forward includes
 
 #define array(t) t*  // forward #include "3rd/3rd_ds.h"
+#ifndef SYS_REALLOC
+#define SYS_REALLOC realloc
+#endif
 #include "fwk_memory.h"
 #include "fwk_math.h"
 #include "fwk_collide.h"
