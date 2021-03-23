@@ -449,6 +449,18 @@ int tty_cols() {
         return w;
     }
 #endif
+#ifdef __linux__
+#ifdef TIOCGSIZE
+    struct ttysize ts;
+    ioctl(STDIN_FILENO, TIOCGSIZE, &ts);
+    return ts.ts_cols - 1;
+#endif
+#ifdef TIOCGWINSZ
+    struct winsize ts;
+    ioctl(STDIN_FILENO, TIOCGWINSZ, &ts);
+    return ts.ws_col - 1;
+#endif
+#endif
     return 80;
 }
 
