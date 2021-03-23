@@ -1,6 +1,8 @@
 // memory framework
 // - rlyeh, public domain
 
+#ifndef __linux__
+
 #ifndef MEMORY_H
 #define MEMORY_H
 #include <stdlib.h>
@@ -129,3 +131,5 @@ void* forget( void *ptr ) {
 }
 
 #endif
+
+#endif // #ifndef __linux__

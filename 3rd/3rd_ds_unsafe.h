@@ -92,7 +92,7 @@ int     is_stringf(const char *s);
 #endif
 
 #define each_substring(str, delims, keyname) \
-    ( char buf[1024], *_lit = (char*)(str), *_bak = (snprintf(buf, 1024, "%s", _lit), _lit); _bak; _bak = 0 ) \
+    ( char buf[1024], *_lit = (char*)(str), *_bak = (snprintf(buf, 1024, "%s", _lit), buf); _bak; _bak = 0 ) \
     for( char *next_token = 0, *keyname = strtok_r(_bak, delims, &next_token); keyname; keyname = strtok_r(NULL, delims, &next_token) )
 
 #endif // STRING_H

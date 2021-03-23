@@ -15,5 +15,5 @@ void main() {
         }
     }
 
-    GL_FRAGCOLOR = mix(texel, border_color, outline * border_color.a);
+    FRAGCOLOR = mix(texel, border_color, outline * border_color.a);
 }

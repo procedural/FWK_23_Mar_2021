@@ -10,5 +10,5 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord ) {
     outcolor = color + grain; // method 1
     // outcolor = color * (1.0 - grain); // method 2
 
-    GL_FRAGCOLOR = vec4(outcolor.rgb, color.a);
+    FRAGCOLOR = vec4(outcolor.rgb, color.a);
 }

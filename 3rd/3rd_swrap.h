@@ -72,6 +72,7 @@ SWDEF int swrapMultiSelect(int*, size_t, double);
     #include <netdb.h>
     #include <fcntl.h>
     #include <unistd.h>
+    #include <netinet/tcp.h>
 #endif
 #include <stddef.h> //NULL
 

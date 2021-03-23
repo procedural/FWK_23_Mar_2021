@@ -3,6 +3,8 @@ Minimalist framework in plain C for quick 3D game development.
 
 <!--## Gallery-->
 ![img](https://i.imgur.com/oywPKvL.png)
+![](https://raw.github.com/procedural/fwk_23_Mar_2021/master/linux-wip-screenshot-1.png)
+![](https://raw.github.com/procedural/fwk_23_Mar_2021/master/linux-wip-screenshot-2.png)
 
 ## Goals
 - [x] ~C++~. C.
@@ -125,6 +127,11 @@ Minimalist framework in plain C for quick 3D game development.
 c:\fwk> cl test.c && test
 ```
 Note: Assimp.dll may need [this package installed](https://www.microsoft.com/en-us/download/confirmation.aspx?id=30679).
+
+## Build (linux, x64)
+```
+~fwk: sudo apt-get install xorg-dev libglfw3-dev && clang -Wno-everything test.c -lm -ldl -pthread && ./a.out
+```
 
 ## License
 The project is released into the public domain (as per [this notice](UNLICENSE)).<br/>

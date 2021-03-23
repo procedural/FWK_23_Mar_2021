@@ -68,14 +68,28 @@ int (PANIC)(const char *error, const char *file, int line);
 #ifdef SYSTEM_C
 #pragma once
 
+#if defined(__GNUC__) || defined(__clang__)
+int __argc; char **__argv;
+__attribute__((constructor)) void init_argcv(int argc, char **argv) { __argc = argc; __argv = argv; }
+#endif
+
 char *app_path() { // should return absolute path always
     static char buffer[1024] = {0};
     if( buffer[0] ) return buffer;
+#if defined(_WIN32)
     unsigned length = GetModuleFileNameA(NULL, buffer, sizeof(buffer)); // @todo: use GetModuleFileNameW+wchar_t && convert to utf8 instead
     char *a = strrchr(buffer, '/');  if(!a) a = buffer + strlen(buffer);
     char *b = strrchr(buffer, '\\'); if(!b) b = buffer + strlen(buffer);
     char slash = (a < b ? *a : b < a ? *b : '/');
     return snprintf(buffer, 1024, "%.*s%c", length - (int)(a < b ? b - a : a - b), buffer, slash), buffer;
+#elif defined(__linux__)
+    char path[21] = {0};
+    sprintf(path, "/proc/%d/exe", getpid());
+    readlink(path, buffer, sizeof(buffer));
+    return buffer;
+#else
+#error "Implement this!"
+#endif
 }
 
 void app_reload() {
@@ -213,12 +227,9 @@ void trace_cb( int traces, int (*yield)(const char *)) { //$
         char *binary = symbols[i]; strstr( symbols[i], "(" )[0] = '\0';
         char command[1024]; sprintf(command, "addr2line -e %s %s", binary, address);
         FILE *fp = popen( command, "rb" );
-        if( !fp ) {
-            exit( puts( "cannot invoke 'addr2line'" ) );
-        }
-        char *line_p = fgets(demangled, sizeof(demangled), fp);
+        char *line_p = fp ? fgets(demangled, sizeof(demangled), fp) : strcpy(demangled, "??");
         symbols[i] = demangled;
-        pclose(fp);
+        if( fp ) pclose(fp);
 #elif __APPLE__
         struct Dl_info info;
         if( dladdr(stack[i], &info) && info.dli_sname ) {
@@ -337,9 +348,17 @@ uint64_t time_gpu() {
 double sleep_ms(double ms) {
     double now = time_ms();
     if( ms <= 0 ) {
+#ifdef _WIN32
         Sleep(0); // yield
+#else
+        usleep(0);
+#endif
     } else {
+#ifdef _WIN32
         Sleep(ms);
+#else
+        usleep(ms * 1000);
+#endif
     }
     return time_ms() - now;
 }
@@ -351,10 +370,6 @@ double sleep_ss(double ss) {
 // ----------------------------------------------------------------------------
 // argc/v
 
-#ifdef __GNUC__ // also, clang
-    int __argc; char **__argv;
-    __attribute__((constructor)) void init_argcv(int argc, char **argv) { __argc = argc; __argv = argv; }
-#endif
 int os_argc() { return __argc; }
 char* os_argv(int arg) { return __argv[arg]; }
 
@@ -434,6 +449,18 @@ int tty_cols() {
         return w;
     }
 #endif
+#ifdef __linux__
+#ifdef TIOCGSIZE
+    struct ttysize ts;
+    ioctl(STDIN_FILENO, TIOCGSIZE, &ts);
+    return ts.ts_cols - 1;
+#endif
+#ifdef TIOCGWINSZ
+    struct winsize ts;
+    ioctl(STDIN_FILENO, TIOCGWINSZ, &ts);
+    return ts.ws_col - 1;
+#endif
+#endif
     return 80;
 }
 
@@ -464,6 +491,9 @@ void breakpoint(const char *line) {
         __except (GetExceptionCode() == EXCEPTION_BREAKPOINT ? \
             EXCEPTION_EXECUTE_HANDLER : EXCEPTION_CONTINUE_SEARCH) {} \
     } while(0);
+#endif
+#ifdef __linux__
+    raise(SIGTRAP);
 #endif
     window_visible(true);
 }

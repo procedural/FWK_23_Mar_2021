@@ -11,7 +11,7 @@ vec3 acesFilm(const vec3 x) {
 out vec4 color;
 
 void main(void) {
-    vec2 uv = GL_TEXCOORD.st;
+    vec2 uv = TEXCOORD.st;
     vec4 src = texture2D(iChannel0, uv);
     color = vec4( acesFilm(src.xyz), src.a);
 }

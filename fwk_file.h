@@ -229,6 +229,7 @@ const char** file_list(const char *masks) {
             while( fgets(buf, sizeof(buf), in) ) {
                 // clean up
                 if( strstr(line, arg0) ) line = buf + larg0;
+                if( !memcmp(line, "./", 2) ) line += 2;
                 int len = strlen(line); while( len > 0 && line[len-1] < 32 ) line[--len] = 0;
                 for(int i = 0; i < len; ++i ) if(line[i] == '\\') line[i] = '/';
                 // insert copy

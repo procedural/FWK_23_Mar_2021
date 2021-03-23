@@ -39,7 +39,7 @@ vec3 PostFilmic_IlfordFp4Push(vec3 c, vec2 uv) {
 out vec4 color;
 
 void main(void) {
-    vec2 uv = GL_TEXCOORD.st;
+    vec2 uv = TEXCOORD.st;
     vec4 src = texture2D(iChannel0, uv);
     color = vec4( PostFilmic_IlfordFp4Push(src.xyz, uv), src.a);
 }

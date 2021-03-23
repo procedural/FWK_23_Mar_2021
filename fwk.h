@@ -16,7 +16,12 @@
 // -----------------------------------------------------------------------------
 // new C keywords
 #define countof(x)   (sizeof (x) / sizeof 0[x])
+#ifdef _WIN32
 #define threadlocal  __declspec(thread)
+#endif
+#ifdef __linux__
+#define threadlocal  __thread
+#endif
 
 // -----------------------------------------------------------------------------
 // directives (debug /O0 /D3 > debugopt /O1 /D2 > release (ndebug) /O2 /D1 > final /O3 /D0)
@@ -48,6 +53,29 @@
 
 // -----------------------------------------------------------------------------
 // forward includes
+
+#ifdef __linux__
+
+#ifndef SYS_REALLOC
+#define SYS_REALLOC realloc
+#endif
+#ifndef _atoi64
+#define _atoi64 atoll
+#endif
+#ifndef strstri
+#define strstri strcasestr
+#endif
+#ifndef strcmpi
+#define strcmpi strcasecmp
+#endif
+#ifndef _popen
+#define _popen popen
+#endif
+#ifndef _pclose
+#define _pclose pclose
+#endif
+
+#endif
 
 #define array(t) t*  // forward #include "3rd/3rd_ds.h"
 #include "fwk_memory.h"
@@ -85,7 +113,11 @@
 #define ONCE                static int once##__LINE__ = 0; for(;!once##__LINE__;once##__LINE__=1) if(!once##__LINE__)
 #define PRINTF(...)         PRINTF(stringf(__VA_ARGS__), 1[#__VA_ARGS__] == '!' ? callstack(+48) : "", __FILE__, __LINE__, __FUNCTION__)
 #define PANIC(...)          PANIC(stringf(__VA_ARGS__), __FILE__, __LINE__)
+#ifdef _WIN32
 #define WARNING(...)        (MessageBoxA(0,stringf(__VA_ARGS__),0,0), 0)
+#else
+#define WARNING(...)        PRINTF(stringf(__VA_ARGS__))
+#endif
 #define ASSERT(expr, ...)   do { int fool_msvc[] = {0,}; if(!(expr)) { fool_msvc[0]++; breakpoint(stringf("!Expression failed: " #expr " " FILELINE "\n" __VA_ARGS__)); } } while(0)
 #define EXPAND(name, ...)   EXPAND_QUOTE(EXPAND_JOIN(name, EXPAND_COUNT_ARGS(__VA_ARGS__)), (__VA_ARGS__))
 #define FILELINE            __FILE__ ":" STRINGIZE(__LINE__)
@@ -140,7 +172,7 @@ void (PRINTF)(const char *text, const char *stack, const char *file, int line, c
 #define SWRAP_STATIC                        // swrap
 #define THREAD_IMPLEMENTATION               // thread
 
-#include "3rd/3rd_ds_safe.h" // 3rd_ds.h
+#include "3rd/3rd_ds.h"
 //---
 #include "3rd/3rd_glad.h"
 #include "3rd/3rd_glfw3.h"
@@ -438,6 +470,7 @@ int fwk_cook(char *filename, const char *ext, const char header[16], FILE *in, F
         ".image.jpg.jpeg.png.tga.bmp.psd.hdr.pic.pnm"
         ".model.iqm.gltf.gltf2.fbx.obj.dae.blend.md3.md5.ms3d.smd.x.3ds.bvh.dxf.lwo"
         ".audio.wav.mod.xm.flac.ogg.mp1.mp3.mid"
+        ".font.ttf"
         ".data.json.xml.csv.ini.cfg.doc.txt.md"
         ".shader.glsl.vs.fs"
         ".script.lua.tl"
@@ -540,6 +573,7 @@ static void fwk_post_init_systems() {
 
     for( int i = 0; i < 16; ++i)
     if(!vfs_mount(stringf(".cook[%d].zip", i))) {}; // PANIC("cannot mount fs: .cook[%d].zip", i);
+	cooker_progress = 101;
 
     // create an empty scene by default
     scene_push();
@@ -549,11 +583,15 @@ static void fwk_post_init_systems() {
     errno = 0;
 }
 static void fwk_pre_swap_systems() {
+	if(cooker_progress <= 100) return;
+
     // flush all batched sprites before swap
     sprite_update();
 
     // flush all debugdraw calls before swap
     // ddraw_flush(); // @fixme: breaks either test_script or test(FXs)
+
+    profile_render();
 
     // flush all batched ui before swap (creates single dummy if no batches are found)
     ui_create();

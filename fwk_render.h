@@ -215,7 +215,7 @@ typedef struct model_t {
 } model_t;
 
 model_t  model(const char *filename, int flags);
-model_t  model_from_mem(const void *filename, int sz, int flags);
+model_t  model_from_mem(const void *mem, int sz, int flags);
 float    model_animate(model_t, float curframe);
 float    model_animate_clip(model_t, float curframe, int minframe, int maxframe, bool loop);
 aabb     model_aabb(model_t, mat44 transform);
@@ -1727,9 +1727,9 @@ bool postfx_load_from_mem( postfx *fx, const char *name, const char *fs ) {
         ""
         "#define texture2D texture\n"
         "#define texture2DLod textureLod\n"
-        "#define GL_FRAGCOLOR fragColor\n"
+        "#define FRAGCOLOR fragColor\n"
         "#define texcoord uv\n"
-        "#define GL_TEXCOORD uv\n"
+        "#define TEXCOORD uv\n"
         "uniform sampler2D iChannel0;\n"
         "uniform sampler2D iChannel1;\n"
         "uniform float iWidth, iHeight, iTime, iFrame, iMousex, iMousey;\n"
@@ -2316,7 +2316,8 @@ model_t model(const char *filename, int flags) {
     char *ptr = vfs_load(filename, &len); // + vfs_popd
     return model_from_mem( ptr, len, flags );
 }
-model_t model_from_mem(const char *ptr, int len, int flags) {
+model_t model_from_mem(const void *mem, int len, int flags) {
+    const char *ptr = (const char *)mem;
     static int shaderprog = -1;
     if( shaderprog < 0 ) {
         const char* vs =

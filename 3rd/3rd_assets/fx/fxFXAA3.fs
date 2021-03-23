@@ -200,8 +200,8 @@ vec4 FxaaPixelShader(
 }
 
 void main() {
-    GL_FRAGCOLOR = FxaaPixelShader(
-                    GL_TEXCOORD.xy,
+    FRAGCOLOR = FxaaPixelShader(
+                    TEXCOORD.xy,
                     tex,
                     1.0/textureSize(tex,0),
                     0.75,  // fxaaQualitySubpix [0..1], default 0.75

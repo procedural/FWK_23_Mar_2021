@@ -63,5 +63,5 @@ vec4 FXAA(sampler2D tex, vec2 uv) {
 }
 
 void main() {
-    GL_FRAGCOLOR = FXAA(iChannel0, texcoord.st);
+    FRAGCOLOR = FXAA(iChannel0, texcoord.st);
 }

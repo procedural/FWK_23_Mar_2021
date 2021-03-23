@@ -5,6 +5,8 @@
 #ifndef COLLIDE_H
 #define COLLIDE_H
 
+#include "3rd/3rd_gjk.h"
+
 typedef struct line     { vec3 a, b;                                                  } line;
 typedef struct sphere   { vec3 c; float r;                                            } sphere;
 typedef struct aabb     { vec3 min, max;                                              } aabb;
@@ -97,15 +99,15 @@ int     poly_test_aabb_transform(poly p, vec3 apos3, mat33 arot33, aabb a);
 int     poly_test_capsule_transform(poly p, vec3 pos3, mat33 rot33, capsule c);
 int     poly_test_poly_transform(poly a, vec3 apos3, mat33 arot33, poly b, vec3 bpos3, mat33 brot33);
 /* poly: gjk result */
-int     poly_hit_sphere(struct gjk_result *res, poly p, sphere s);
-int     poly_hit_aabb(struct gjk_result *res, poly p, aabb a);
-int     poly_hit_capsule(struct gjk_result *res, poly p, capsule c);
-int     poly_hit_poly(struct gjk_result *res, poly a, poly b);
+int     poly_hit_sphere(gjk_result *res, poly p, sphere s);
+int     poly_hit_aabb(gjk_result *res, poly p, aabb a);
+int     poly_hit_capsule(gjk_result *res, poly p, capsule c);
+int     poly_hit_poly(gjk_result *res, poly a, poly b);
 /* poly: gjk result transformed */
-int     poly_hit_sphere_transform(struct gjk_result *res, poly p, vec3 pos3, mat33 rot33, sphere s);
-int     poly_hit_aabb_transform(struct gjk_result *res, poly p, vec3 pos3, mat33 rot33, aabb a);
-int     poly_hit_capsule_transform(struct gjk_result *res, poly p, vec3 pos3, mat33 rot33, capsule c);
-int     poly_hit_poly_transform(struct gjk_result *res, poly a, vec3 at3, mat33 ar33, poly b, vec3 bt3, mat33 br33);
+int     poly_hit_sphere_transform(gjk_result *res, poly p, vec3 pos3, mat33 rot33, sphere s);
+int     poly_hit_aabb_transform(gjk_result *res, poly p, vec3 pos3, mat33 rot33, aabb a);
+int     poly_hit_capsule_transform(gjk_result *res, poly p, vec3 pos3, mat33 rot33, capsule c);
+int     poly_hit_poly_transform(gjk_result *res, poly a, vec3 at3, mat33 ar33, poly b, vec3 bt3, mat33 br33);
 
 vec4    plane4(vec3 p, vec3 n);
 

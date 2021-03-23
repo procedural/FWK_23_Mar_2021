@@ -16,10 +16,10 @@ vec3 rgb2hsv(vec3 c) {
 }
 
 void main() {
-    vec2 uv = GL_TEXCOORD.st;
+    vec2 uv = TEXCOORD.st;
     vec4 src = texture2D( iChannel0, uv );
 
     vec3 c = rgb2hsv(src.rgb);
 
-    GL_FRAGCOLOR = vec4( hsv2rgb(c * vec3(h,s,v)), src.a );
+    FRAGCOLOR = vec4( hsv2rgb(c * vec3(h,s,v)), src.a );
 }

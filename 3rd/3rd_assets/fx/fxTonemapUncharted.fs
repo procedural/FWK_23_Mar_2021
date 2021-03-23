@@ -21,7 +21,7 @@ vec3 tonemapUncharted2(const vec3 color) {
 out vec4 color;
 
 void main(void) {
-    vec2 uv = GL_TEXCOORD.st;
+    vec2 uv = TEXCOORD.st;
     vec4 src = texture2D(iChannel0, uv);
     color = vec4( tonemapUncharted2(src.xyz), src.a);
 }
