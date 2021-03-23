@@ -63,6 +63,9 @@
 #ifndef strstri
 #define strstri strcasestr
 #endif
+#ifndef strcmpi
+#define strcmpi strcasecmp
+#endif
 #include "fwk_memory.h"
 #include "fwk_math.h"
 #include "fwk_collide.h"
