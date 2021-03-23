@@ -483,6 +483,9 @@ void breakpoint(const char *line) {
             EXCEPTION_EXECUTE_HANDLER : EXCEPTION_CONTINUE_SEARCH) {} \
     } while(0);
 #endif
+#ifdef __linux__
+    raise(SIGTRAP);
+#endif
     window_visible(true);
 }
 bool has_debugger() {
