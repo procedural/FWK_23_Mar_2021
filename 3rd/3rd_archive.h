@@ -423,7 +423,7 @@ int zip__callback(FILE *fp, int idx, JZGlobalFileHeader *header, char *filename,
 
 // zip read
 
-int ZIP_DEBUG = 1;
+int ZIP_DEBUG = 0;
 
 int zip_find(zip *z, const char *entryname) {
     int zip_debug = ZIP_DEBUG; ZIP_DEBUG = 0;

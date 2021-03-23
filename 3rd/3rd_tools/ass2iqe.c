@@ -1141,7 +1141,7 @@ void usage()
     exit(1);
 }
 
-#ifdef _MSC_VER
+#if 1 // def _MSC_VER
 static threadlocal char* optarg = NULL;
 static threadlocal int optind = 1;
 int getopt(int argc, char *const argv[], const char *optstring) {

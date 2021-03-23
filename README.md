@@ -3,8 +3,6 @@ Minimalist framework in plain C for quick 3D game development.
 
 <!--## Gallery-->
 ![img](https://i.imgur.com/oywPKvL.png)
-![](https://raw.github.com/procedural/fwk_23_Mar_2021/master/linux-wip-screenshot-1.png)
-![](https://raw.github.com/procedural/fwk_23_Mar_2021/master/linux-wip-screenshot-2.png)
 
 ## Goals
 - [x] ~C++~. C.

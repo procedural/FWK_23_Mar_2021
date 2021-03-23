@@ -16,12 +16,7 @@
 // -----------------------------------------------------------------------------
 // new C keywords
 #define countof(x)   (sizeof (x) / sizeof 0[x])
-#ifdef _WIN32
 #define threadlocal  __declspec(thread)
-#endif
-#ifdef __linux__
-#define threadlocal  __thread
-#endif
 
 // -----------------------------------------------------------------------------
 // directives (debug /O0 /D3 > debugopt /O1 /D2 > release (ndebug) /O2 /D1 > final /O3 /D0)
@@ -53,29 +48,6 @@
 
 // -----------------------------------------------------------------------------
 // forward includes
-
-#ifdef __linux__
-
-#ifndef SYS_REALLOC
-#define SYS_REALLOC realloc
-#endif
-#ifndef _atoi64
-#define _atoi64 atoll
-#endif
-#ifndef strstri
-#define strstri strcasestr
-#endif
-#ifndef strcmpi
-#define strcmpi strcasecmp
-#endif
-#ifndef _popen
-#define _popen popen
-#endif
-#ifndef _pclose
-#define _pclose pclose
-#endif
-
-#endif
 
 #define array(t) t*  // forward #include "3rd/3rd_ds.h"
 #include "fwk_memory.h"
@@ -113,11 +85,7 @@
 #define ONCE                static int once##__LINE__ = 0; for(;!once##__LINE__;once##__LINE__=1) if(!once##__LINE__)
 #define PRINTF(...)         PRINTF(stringf(__VA_ARGS__), 1[#__VA_ARGS__] == '!' ? callstack(+48) : "", __FILE__, __LINE__, __FUNCTION__)
 #define PANIC(...)          PANIC(stringf(__VA_ARGS__), __FILE__, __LINE__)
-#ifdef _WIN32
 #define WARNING(...)        (MessageBoxA(0,stringf(__VA_ARGS__),0,0), 0)
-#else
-#define WARNING(...)        PRINTF(stringf(__VA_ARGS__))
-#endif
 #define ASSERT(expr, ...)   do { int fool_msvc[] = {0,}; if(!(expr)) { fool_msvc[0]++; breakpoint(stringf("!Expression failed: " #expr " " FILELINE "\n" __VA_ARGS__)); } } while(0)
 #define EXPAND(name, ...)   EXPAND_QUOTE(EXPAND_JOIN(name, EXPAND_COUNT_ARGS(__VA_ARGS__)), (__VA_ARGS__))
 #define FILELINE            __FILE__ ":" STRINGIZE(__LINE__)
